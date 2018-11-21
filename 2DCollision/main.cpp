@@ -39,6 +39,15 @@ int main()
 	npc_animated_sprite.addFrame(sf::IntRect(343, 3, 84, 84));
 	npc_animated_sprite.addFrame(sf::IntRect(428, 3, 84, 84));
 
+	// Setup NPC's Default Animated Sprite
+	AnimatedSprite npc_animated_circle(npc_texture);
+	npc_animated_circle.addFrame(sf::IntRect(3, 88, 84, 84));
+	npc_animated_circle.addFrame(sf::IntRect(88, 88, 84, 84));
+	npc_animated_circle.addFrame(sf::IntRect(173, 88, 84, 84));
+	npc_animated_circle.addFrame(sf::IntRect(258, 88, 84, 84));
+	npc_animated_circle.addFrame(sf::IntRect(343, 88, 84, 84));
+	npc_animated_circle.addFrame(sf::IntRect(428, 88, 84, 84));
+
 	// Setup Players Default Animated Sprite
 	AnimatedSprite player_animated_sprite(player_texture);
 	player_animated_sprite.addFrame(sf::IntRect(3, 3, 84, 84));
@@ -145,6 +154,8 @@ int main()
 				//Closes Window
 					window.close();
 					break;
+			case sf::Keyboard::Q:
+				npc = NPC(npc_animated_circle);
 			default:
 				break;
 			}
@@ -164,9 +175,11 @@ int main()
 		cout << ((result != 0) ? ("Collision") : "") << endl;
 		if (result){
 			player.getAnimatedSprite().setColor(sf::Color(255,0,0));
+			//input.setCurrent(1);
 		}
 		else {
 			player.getAnimatedSprite().setColor(sf::Color(0, 255, 0));
+			//input.setCurrent(0);
 		}
 
 		// Clear screen
