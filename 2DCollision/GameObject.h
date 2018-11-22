@@ -18,6 +18,7 @@ public:
 	virtual AnimatedSprite& getAnimatedSprite() = 0;
 	virtual void handleInput(Input) = 0;
 	virtual void update() = 0;
+	virtual void setSprite(const AnimatedSprite& a) = 0;
 };
 
 #endif // !GAME_OBJECT_H

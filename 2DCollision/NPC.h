@@ -14,6 +14,7 @@ public:
 	~NPC();
 	NPC(const AnimatedSprite&);
 	AnimatedSprite& getAnimatedSprite();
+	void setSprite(const AnimatedSprite& a);
 	void handleInput(Input);
 	void update();
 };

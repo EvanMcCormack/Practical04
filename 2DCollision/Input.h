@@ -6,10 +6,26 @@ public:
 	Input();
 	~Input();
 
-	void setCurrent(int result);
-	int getCurrent();
+	enum collisionType
+	{
+		AABBToAABB,
+		AABBToCap,
+		AABBToPoly,
+		AABBToRay,
+		CircleToAABB,
+		CircleToCircle, 
+		CircleToRay,
+		CircleToCap,
+		CircleToPoly, 
+		RayToAABB,
+		RayToCap,
+		RayToCircle, 
+		RayToPoly,
+	};
 
+	void setCurrent(collisionType a);
+	collisionType getCurrent();
 private:
-	int m_current;
+	collisionType m_current;
 };
 #endif

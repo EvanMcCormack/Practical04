@@ -26,6 +26,11 @@ AnimatedSprite& NPC::getAnimatedSprite()
 	return m_animated_sprite;
 }
 
+void NPC::setSprite(const AnimatedSprite & a)
+{
+	m_animated_sprite = a;
+}
+
 void NPC::handleInput(Input in)
 {
 	DEBUG_MSG("Handle Input");

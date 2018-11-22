@@ -48,6 +48,22 @@ int main()
 	npc_animated_circle.addFrame(sf::IntRect(343, 88, 84, 84));
 	npc_animated_circle.addFrame(sf::IntRect(428, 88, 84, 84));
 
+	AnimatedSprite npc_animated_cap(npc_texture);
+	npc_animated_cap.addFrame(sf::IntRect(3, 173, 84, 84));
+	npc_animated_cap.addFrame(sf::IntRect(88, 173, 84, 84));
+	npc_animated_cap.addFrame(sf::IntRect(173, 173, 84, 84));
+	npc_animated_cap.addFrame(sf::IntRect(258, 173, 84, 84));
+	npc_animated_cap.addFrame(sf::IntRect(343, 173, 84, 84));
+	npc_animated_cap.addFrame(sf::IntRect(428, 173, 84, 84));
+
+	AnimatedSprite npc_animated_poly(npc_texture);
+	npc_animated_poly.addFrame(sf::IntRect(3, 258, 84, 84));
+	npc_animated_poly.addFrame(sf::IntRect(88, 258, 84, 84));
+	npc_animated_poly.addFrame(sf::IntRect(173, 258, 84, 84));
+	npc_animated_poly.addFrame(sf::IntRect(258, 258, 84, 84));
+	npc_animated_poly.addFrame(sf::IntRect(343, 258, 84, 84));
+	npc_animated_poly.addFrame(sf::IntRect(428, 258, 84, 84));
+
 	// Setup Players Default Animated Sprite
 	AnimatedSprite player_animated_sprite(player_texture);
 	player_animated_sprite.addFrame(sf::IntRect(3, 3, 84, 84));
@@ -56,6 +72,14 @@ int main()
 	player_animated_sprite.addFrame(sf::IntRect(258, 3, 84, 84));
 	player_animated_sprite.addFrame(sf::IntRect(343, 3, 84, 84));
 	player_animated_sprite.addFrame(sf::IntRect(428, 3, 84, 84));
+
+	AnimatedSprite player_animated_circle(player_texture);
+	player_animated_circle.addFrame(sf::IntRect(3, 88, 84, 84));
+	player_animated_circle.addFrame(sf::IntRect(88, 88, 84, 84));
+	player_animated_circle.addFrame(sf::IntRect(173, 88, 84, 84));
+	player_animated_circle.addFrame(sf::IntRect(258, 88, 84, 84));
+	player_animated_circle.addFrame(sf::IntRect(343, 88, 84, 84));
+	player_animated_circle.addFrame(sf::IntRect(428, 88, 84, 84));
 
 	// Setup the NPC
 	GameObject &npc = NPC(npc_animated_sprite);
@@ -77,9 +101,22 @@ int main()
 	aabb_player.min = c2V(player.getAnimatedSprite().getPosition().x, player.getAnimatedSprite().getPosition().y);
 	aabb_player.max = c2V(player.getAnimatedSprite().getGlobalBounds().width / 6, player.getAnimatedSprite().getGlobalBounds().width / 6);
 
+	c2Circle circle_npc;
+	circle_npc.r = 42;
+	circle_npc.p = c2V(npc.getAnimatedSprite().getPosition().x + circle_npc.r, npc.getAnimatedSprite().getPosition().y + circle_npc.r );
+
+	c2Capsule cap_npc;
+	cap_npc.r = 16;
+	cap_npc.a = c2V(npc.getAnimatedSprite().getPosition().x + cap_npc.r, npc.getAnimatedSprite().getPosition().y + cap_npc.r);
+	cap_npc.b = c2V(npc.getAnimatedSprite().getPosition().x + 84, npc.getAnimatedSprite().getPosition().y + cap_npc.r);
+
+	c2Circle circle_player;
+	circle_player.r = 42;
+	circle_player.p = c2V(player.getAnimatedSprite().getPosition().x + circle_player.r, player.getAnimatedSprite().getPosition().y + circle_player.r);
 
 	// Initialize Input
-	Input input;
+	Input currentInput;
+	Input previousInput;
 
 	// Collision result
 	int result = 0;
@@ -127,7 +164,12 @@ int main()
 			npc.getAnimatedSprite().getPosition().y +
 			npc.getAnimatedSprite().getGlobalBounds().height
 		);
-
+		//update NPC circle
+		circle_npc.p = c2V(npc.getAnimatedSprite().getPosition().x + circle_npc.r, npc.getAnimatedSprite().getPosition().y + circle_npc.r);
+		//Update NCP Capsule
+		cap_npc.a = c2V(npc.getAnimatedSprite().getPosition().x + cap_npc.r, npc.getAnimatedSprite().getPosition().y + 
+			(84 - cap_npc.r) );
+		cap_npc.b = c2V(npc.getAnimatedSprite().getPosition().x + (84 - cap_npc.r), npc.getAnimatedSprite().getPosition().y + cap_npc.r);
 		// Update Player AABB
 		aabb_player.min = c2V(
 			player.getAnimatedSprite().getPosition().x, 
@@ -139,6 +181,8 @@ int main()
 			player.getAnimatedSprite().getPosition().y + 
 			player.getAnimatedSprite().getGlobalBounds().height
 		);
+		//Update Player as circle
+		circle_player.p = c2V(player.getAnimatedSprite().getPosition().x + circle_player.r, player.getAnimatedSprite().getPosition().y + circle_player.r);
 
 		// Process events
 		sf::Event event;
@@ -154,15 +198,70 @@ int main()
 				//Closes Window
 					window.close();
 					break;
-			case sf::Keyboard::Q:
-				npc = NPC(npc_animated_circle);
 			default:
 				break;
 			}
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1))
+			{
+				//npc.setSprite(npc_animated_sprite);
+				currentInput.setCurrent(Input::AABBToAABB);
+			}
+			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2))
+			{
+				//npc.setSprite(npc_animated_circle);
+				currentInput.setCurrent(Input::CircleToAABB);
+			}
+			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num3))
+			{
+				//npc.setSprite(npc_animated_cap);
+				currentInput.setCurrent(Input::AABBToCap);
+			}
+			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num4))
+			{
+				currentInput.setCurrent(Input::CircleToAABB);
+			}
+			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num5))
+			{
+				currentInput.setCurrent(Input::CircleToCap);
+			}
+			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num6))
+			{
+				currentInput.setCurrent(Input::CircleToCircle);
+			}	
+		}
+		
+		if (currentInput.getCurrent() != previousInput.getCurrent())
+		{
+			if (currentInput.getCurrent() == Input::AABBToAABB)
+			{
+				player.setSprite(player_animated_sprite);
+				npc.setSprite(npc_animated_sprite);
+			}
+			else if (currentInput.getCurrent() == Input::AABBToCap)
+			{
+				player.setSprite(player_animated_sprite);
+				npc.setSprite(npc_animated_cap);
+			}
+			else if (currentInput.getCurrent() == Input::CircleToAABB)
+			{
+				player.setSprite(player_animated_circle);
+				npc.setSprite(npc_animated_sprite);
+			}
+			else if (currentInput.getCurrent() == Input::CircleToCap)
+			{
+				player.setSprite(player_animated_circle);
+				npc.setSprite(npc_animated_cap);
+			}
+			else if (currentInput.getCurrent() == Input::CircleToCircle)
+			{
+				player.setSprite(player_animated_circle);
+				npc.setSprite(npc_animated_circle);
+			}
 		}
 
+		previousInput = currentInput;
 		// Handle input to Player
-		player.handleInput(input);
+		player.handleInput(currentInput);
 
 		// Update the Player
 		player.update();
@@ -171,7 +270,27 @@ int main()
 		npc.update();
 
 		// Check for collisions
-		result = c2AABBtoAABB(aabb_player, aabb_npc);
+		if (currentInput.getCurrent() == Input::AABBToAABB)
+		{
+			result = c2AABBtoAABB(aabb_player, aabb_npc);
+		}
+		else if (currentInput.getCurrent() == Input::AABBToCap)
+		{
+			result = c2AABBtoCapsule(aabb_player, cap_npc);
+		}
+		else if (currentInput.getCurrent() == Input::CircleToAABB)
+		{
+			result = c2CircletoAABB(circle_player, aabb_npc);
+		}
+		else if (currentInput.getCurrent() == Input::CircleToCap)
+		{
+			result = c2CircletoCapsule(circle_player, cap_npc);
+		}
+		else if (currentInput.getCurrent() == Input::CircleToCircle)
+		{
+			result = c2CircletoCircle(circle_player, circle_npc);
+		}
+
 		cout << ((result != 0) ? ("Collision") : "") << endl;
 		if (result){
 			player.getAnimatedSprite().setColor(sf::Color(255,0,0));
@@ -185,11 +304,11 @@ int main()
 		// Clear screen
 		window.clear();
 
-		// Draw the Players Current Animated Sprite
-		window.draw(player.getAnimatedSprite());
-
 		// Draw the NPC's Current Animated Sprite
 		window.draw(npc.getAnimatedSprite());
+
+		// Draw the Players Current Animated Sprite
+		window.draw(player.getAnimatedSprite());
 
 		// Update the window
 		window.display();

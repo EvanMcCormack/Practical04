@@ -2,14 +2,14 @@
 
 Input::Input() 
 {
-	m_current = 0;
+	m_current = AABBToAABB;
 }
 Input::~Input() {}
 
-void Input::setCurrent(int result) {
-	m_current = result;
+void Input::setCurrent(collisionType a) {
+	m_current = a;
 }
 
-int Input::getCurrent() {
+Input::collisionType Input::getCurrent() {
 	return m_current;
 }

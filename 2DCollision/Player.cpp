@@ -26,6 +26,11 @@ AnimatedSprite& Player::getAnimatedSprite()
 	return m_animated_sprite;
 }
 
+void Player::setSprite(const AnimatedSprite & a)
+{
+	m_animated_sprite = a;
+}
+
 void Player::handleInput(Input in)
 {
 	DEBUG_MSG("Handle Input");
