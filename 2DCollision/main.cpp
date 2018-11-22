@@ -114,6 +114,15 @@ int main()
 	circle_player.r = 42;
 	circle_player.p = c2V(player.getAnimatedSprite().getPosition().x + circle_player.r, player.getAnimatedSprite().getPosition().y + circle_player.r);
 
+	
+	VertexArray player_line;
+
+	c2Ray ray_player;
+	ray_player.p = c2V(player.getAnimatedSprite().getPosition().x, player.getAnimatedSprite().getPosition().y);
+	ray_player.d = c2V(player.getAnimatedSprite().getPosition().x + 12.5f, player.getAnimatedSprite().getPosition().y + 5.6f);
+	ray_player.t = 10.0f;
+	sf::Vertex p1 = sf::Vector2f(player.getAnimatedSprite().getPosition().x, player.getAnimatedSprite().getPosition().y);
+	p1.color = sf::Color::Red;
 	// Initialize Input
 	Input currentInput;
 	Input previousInput;
@@ -164,6 +173,8 @@ int main()
 			npc.getAnimatedSprite().getPosition().y +
 			npc.getAnimatedSprite().getGlobalBounds().height
 		);
+		//Update player ray
+		ray_player.p = c2V(player.getAnimatedSprite().getPosition().x, player.getAnimatedSprite().getPosition().y);
 		//update NPC circle
 		circle_npc.p = c2V(npc.getAnimatedSprite().getPosition().x + circle_npc.r, npc.getAnimatedSprite().getPosition().y + circle_npc.r);
 		//Update NCP Capsule
@@ -228,6 +239,10 @@ int main()
 			{
 				currentInput.setCurrent(Input::CircleToCircle);
 			}	
+			/*else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num7))
+			{
+				currentInput.setCurrent(Input::RayToAABB);
+			}*/
 		}
 		
 		if (currentInput.getCurrent() != previousInput.getCurrent())
@@ -256,6 +271,10 @@ int main()
 			{
 				player.setSprite(player_animated_circle);
 				npc.setSprite(npc_animated_circle);
+			}
+			else if (currentInput.getCurrent() == Input::RayToAABB)
+			{
+				//player.setSprite()
 			}
 		}
 
